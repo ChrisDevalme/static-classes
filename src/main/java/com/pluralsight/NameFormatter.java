@@ -1,33 +1,63 @@
 package com.pluralsight;
 
 public class NameFormatter {
-    private String prefix;
-    private String firstName;
-    private String middleName;
-    private String lastName;
-    private String suffix;
+
 
     private NameFormatter(){}
 
     public static String format(String firstName, String lastName) {
-        return lastName + ", " + firstName;
+        // calls the second one "format()" and handles it with the logic below
+        return format("", firstName,  "", lastName, "") ;
     }
 
     public static String format(String prefix, String firstName, String middleName, String lastName, String suffix) {
-        String fullName;
-        if (prefix.isBlank() && suffix.isBlank() && middleName.isBlank()){
-            fullName = firstName + " " + lastName;
-        } else if (middleName.isBlank() && prefix.isBlank()) {
-            fullName = firstName + " " + lastName + " " + suffix;
-        } else if(suffix.isBlank() && prefix.isBlank()) {
-            fullName = firstName + " " + middleName + " " + lastName;
-        } else {
-            fullName = prefix + " " + firstName + " " + middleName + " " + lastName + ", " + suffix;
+        StringBuilder sb =  new StringBuilder();
+
+        sb.append(lastName).append(", ");
+
+        if(!prefix.isEmpty()) {
+            sb.append(prefix).append(" ");
         }
-        return fullName;
+
+        sb.append(firstName);
+
+        if(!middleName.isEmpty()) {
+            sb.append(" ").append(middleName);
+        }
+        if(!suffix.isEmpty()) {
+            sb.append(", ").append(suffix);
+        }
+        return sb.toString();
     }
 
     public static String format(String fullName){
+        String[] parts = fullName.split(", ");
+        String mainPart = parts[0];
+        String suffix = parts.length > 1 ? parts[1] : "";
+
+        String nameParts[] = mainPart.split(" ");
+
+        String prefix = "", firstName = "", middleName = "", lastName = "";
+
+        switch (nameParts.length) {
+            case 4:
+                prefix = nameParts[0];
+                firstName = nameParts[1];
+                middleName= nameParts[2];
+                lastName = nameParts[3];
+                break;
+            case 3:
+                firstName = nameParts[0];
+                middleName = nameParts[1];
+                lastName = nameParts[2];
+                break;
+            case 2:
+                firstName = nameParts[0];
+                lastName = nameParts[1];
+                break;
+        }
+
+        return format(prefix, firstName, middleName, lastName, suffix);
 
     }
 }
